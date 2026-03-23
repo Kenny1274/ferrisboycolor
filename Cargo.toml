@@ -1,0 +1,25 @@
+[package]
+name = "ferrisboy"
+version = "0.2.0"
+edition = "2021"
+authors = ["FerrisBoy"]
+description = "FerrisBoy — A Game Boy (DMG + CGB) emulator written in Rust, inspired by mGBA"
+
+[[bin]]
+name = "ferrisboy"
+path = "src/main.rs"
+
+[dependencies]
+sdl2    = { version = "0.36", features = ["unsafe_textures"] }
+clap    = { version = "4", features = ["derive"] }
+log     = "0.4"
+env_logger = "0.11"
+bitflags   = "2"
+
+[profile.release]
+opt-level  = 3
+lto        = true
+codegen-units = 1
+
+[profile.dev]
+opt-level = 1
