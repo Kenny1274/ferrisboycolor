@@ -1,4 +1,4 @@
-# 🦀 FerrisBoy v0.2
+# 🦀 FerrisBoyColor 
 
 **A Game Boy (DMG) and Game Boy Color (CGB) emulator written in Rust, inspired by mGBA.**
 
@@ -90,8 +90,26 @@ Mode 1 → V-Blank (10 lines)
 
 ```bash
 # Install SDL2
-sudo apt install libsdl2-dev   # Ubuntu/Debian
-brew install sdl2               # macOS
+# Ubuntu / Debian
+sudo apt install libsdl2-dev
+
+# Fedora / RHEL / CentOS
+sudo dnf install SDL2-devel
+
+# Arch / Manjaro
+sudo pacman -S sdl2
+
+# NixOS
+nix-env -iA nixpkgs.SDL2
+
+# openSUSE
+sudo zypper install libSDL2-devel
+
+# Gentoo
+sudo emerge libsdl2
+
+# macOS (Homebrew)
+brew install sdl2
 
 # Build & run
 cargo run --release -- path/to/game.gb
