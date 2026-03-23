@@ -97,7 +97,7 @@ impl Bus {
 
             0xFF00          => self.joypad.read(),
             0xFF01..=0xFF02 => self.serial.read(addr),
-            0xFF03..=0xFF07 => self.timer.read(addr),
+            0xFF04..=0xFF07 => self.timer.read(addr),
             0xFF0F          => self.interrupt_flag | 0xE0,
 
             0xFF10..=0xFF3F => self.apu.read(addr),
@@ -137,13 +137,13 @@ impl Bus {
 
             0xFF00          => self.joypad.write(val),
             0xFF01..=0xFF02 => self.serial.write(addr, val),
-            0xFF03..=0xFF07 => self.timer.write(addr, val),
+            0xFF04..=0xFF07 => self.timer.write(addr, val),
             0xFF0F          => self.interrupt_flag = val | 0xE0,
 
             0xFF10..=0xFF3F => self.apu.write(addr, val),
 
-            0xFF40..=0xFF4B => self.ppu.write(addr, val),
             0xFF46          => self.start_oam_dma(val),
+            0xFF40..=0xFF45 | 0xFF47..=0xFF4B => self.ppu.write(addr, val),
 
             0xFF4D => { // KEY1 — prepare speed switch
                 if self.model.is_cgb() { self.speed_switch_armed = val & 0x01 != 0; }
@@ -152,7 +152,13 @@ impl Bus {
 
             0xFF50 => { if val & 0x01 != 0 { self.boot_rom_enabled = false; } }
 
-            0xFF51..=0xFF55 => { if self.model.is_cgb() { self.hdma.write(addr, val); } }
+            0xFF51..=0xFF55 => {
+                if self.model.is_cgb() {
+                    self.hdma.write(addr, val);
+                    // GDMA executes immediately when armed via FF55 with bit7=0
+                    if addr == 0xFF55 { self.hdma_gdma(); }
+                }
+            }
             0xFF68..=0xFF6B => self.ppu.write(addr, val),
 
             0xFF70 => { // SVBK — WRAM bank

@@ -396,7 +396,7 @@ impl Ppu {
                     self.framebuffer.fill(0xFF);
                 }
             }
-            0xFF41 => self.stat = (self.stat & 0x87) | (val & 0x78),
+            0xFF41 => self.stat = (self.stat & 0x07) | (val & 0x78),
             0xFF42 => self.scy  = val, 0xFF43 => self.scx = val,
             0xFF44 => {}
             0xFF45 => { self.lyc = val; self.check_lyc(); }
